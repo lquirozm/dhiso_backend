@@ -18,14 +18,19 @@ app.get("/", (req, res) => {
     res.send("Servidor de correo electrónico en funcionamiento");
 });
 
-app.post("/send-email", async (req, res) => {
+app.post("/emails", async (req, res) => {
     const {name, email, message} = req.body;
   try {
     const data = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
-      to: ["langelq59@gmail.com"],
-      subject: `Nuevo mensaje del Formulario Web de parte de: ${name}`,
-      html: `<strong>Mensaje:</strong> ${message}<br><strong>Correo:</strong> ${email}`
+      to: ["ventas@dhisoingenieriayconstruccion.com"],
+      subject: `Nuevo mensaje desde el sitio web de: ${name}`,
+      html: `
+              <p>Has recibido un nuevo mensaje a través del formulario de contacto.</p>
+              <p><strong>Nombre:</strong> ${name}</p>
+              <p><strong>Correo electrónico:</strong> ${email}</p>
+              <p><strong>Mensaje:</strong><br>${message}</p>
+            `
     });
 
     res.status(200).json({message:"Mensaje enviado exitosamente, nos pondremos en contacto contigo pronto."});
