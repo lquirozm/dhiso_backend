@@ -13,10 +13,8 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.get("/", (req, res) => {
-    res.send("Servidor de correo electrónico en funcionamiento");
-});
 
 app.post("/emails", async (req, res) => {
     const {name, email, message} = req.body;
