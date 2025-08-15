@@ -9,19 +9,28 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-//Middleware
-
+app.disable("x-powered-by");
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
 app.post("/emails", async (req, res) => {
-    const {name, email, message} = req.body;
+  const {name, email, message} = req.body;
+
+  if (!name || !email || !message) {
+    return res.status(400).json({ error: "Todos los campos son obligatorios" });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "El correo electrónico no es válido" });
+  }
+
   try {
     const data = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
-      to: ["ventas@dhisoingenieriayconstruccion.com"],
+      to: ["test@gmail.com"],
       subject: `Nuevo mensaje desde el sitio web de: ${name}`,
       html: `
               <p>Has recibido un nuevo mensaje a través del formulario de contacto.</p>
@@ -29,7 +38,7 @@ app.post("/emails", async (req, res) => {
               <p><strong>Correo electrónico:</strong> ${email}</p>
               <p><strong>Mensaje:</strong><br>${message}</p>
             `
-    });
+      });
 
     res.status(200).json({message:"Mensaje enviado exitosamente, nos pondremos en contacto contigo pronto."});
   } catch (error) {
