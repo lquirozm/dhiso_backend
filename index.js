@@ -29,8 +29,8 @@ app.post("/emails", async (req, res) => {
 
   try {
     const data = await resend.emails.send({
-      from: "Acme <onboarding@resend.dev>",
-      to: ["test@gmail.com"],
+      from: "Formulario Web <contacto@dhisoingenieriayconstruccion.com>",
+      to: ["ventas@dhisoingenieriayconstruccion.com"],
       subject: `Nuevo mensaje desde el sitio web de: ${name}`,
       html: `
               <p>Has recibido un nuevo mensaje a través del formulario de contacto.</p>
@@ -42,8 +42,9 @@ app.post("/emails", async (req, res) => {
 
     res.status(200).json({message:"Mensaje enviado exitosamente, nos pondremos en contacto contigo pronto."});
   } catch (error) {
-    res.status(400).json({error: "Error al enviar el mensaje, por favor intente más tarde."});
-  }
+      console.error("Error al enviar el correo:", error);
+      res.status(500).json({error: "Error al enviar el mensaje, por favor intente más tarde."});
+    }
 });
 
 app.listen(PORT, () => {
