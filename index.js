@@ -11,9 +11,13 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+app.set('trust proxy', 1);
+
 app.use(helmet())
 app.disable("x-powered-by");
+
 app.use(corsMiddleware());
+
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
@@ -86,6 +90,11 @@ app.post("/emails", async (req, res) => {
         error: "Error al enviar el mensaje, por favor intente más tarde."});
     }
 });
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 
 // Manejo de rutas no encontradas
 app.use((req, res) => {
